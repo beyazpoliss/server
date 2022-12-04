@@ -1,40 +1,50 @@
-package com.easycraft.server.user;
+package com.easycraft.server.model;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
-@Document(collection = "users")
-@NoArgsConstructor
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+
+@Document("Users")
 @Getter
 @Setter
+@Builder
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
 public class User implements UserDetails {
-  @Id
-  private UUID id;
-  private String username;
-  private String email;
-  private String password;
-  private UserRole userRole;
 
-  private boolean locked = false;
-  private boolean enabled = false;
+  @Id
+  private String id;
+
+  private String username;
+  private String password;
+  private String crafterName;
+
+  private Date accountCreateDate;
+  private Date userDateOfBirth;
+
+  private String email;
+  private String role;
+  private boolean locked;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    final var authority = new SimpleGrantedAuthority(userRole.name());
-    return Collections.singletonList(authority);
+    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("USER");
+    return Collections.singleton(authority);
   }
 
   @Override
@@ -54,7 +64,7 @@ public class User implements UserDetails {
 
   @Override
   public boolean isAccountNonLocked() {
-    return false;
+    return !locked;
   }
 
   @Override
@@ -64,7 +74,7 @@ public class User implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return false;
+    return true;
   }
 
 }

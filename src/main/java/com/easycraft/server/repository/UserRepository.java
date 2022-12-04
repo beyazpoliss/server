@@ -1,15 +1,32 @@
 package com.easycraft.server.repository;
 
-import com.easycraft.server.user.User;
-import java.util.Optional;
+import com.easycraft.server.model.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, String> {
-  Optional<User> findByUsername(String username);
 
-  Optional<User> findByEmail(String email);
+  @Override
+  @NotNull
+  Optional<User> findById(@NotNull final String id);
 
-  Boolean existsByUsername(String username);
+  @Query("{username : ?0, password : ?1}")
+  User findUserByUsernameAndPassword(@NotNull final String username, @NotNull final String password);
 
-  Boolean existsByEmail(String email);
+  @Query("{username : ?0}")
+  User findUserByUserName(@NotNull final String username);
+
+  @Query("{crafterName : ?0}")
+  User findUserByCrafterName(@NotNull final String crafterName);
+
+  @Query("{email : ?0}")
+  User findUserByEmail(@NotNull final String email);
+
+  @Override
+  @NotNull
+  List<User> findAll();
 }
