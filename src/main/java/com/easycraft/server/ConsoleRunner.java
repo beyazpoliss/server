@@ -13,7 +13,8 @@ public class ConsoleRunner {
   @Bean
   public CommandLineRunner run(@NotNull final BCryptPasswordEncoder encoder, @NotNull final UserService userService){
     return args -> {
-      System.out.println("Application Started.");
+      System.out.println("EasyCraft Server has started!");
+      System.out.println("Ready to respond with localhost:8080");
     };
   }
 

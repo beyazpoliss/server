@@ -7,6 +7,7 @@ import com.easycraft.server.model.UserInfo;
 import com.easycraft.server.repository.UserRepository;
 import com.easycraft.server.request.RegistrationRequest;
 import com.easycraft.server.response.RegistrationResponse;
+import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,7 +37,7 @@ public record UserService(
 
     Validator.validate(name,crafterName,password,matchPassword,email);
 
-    if (userRepository.findUserByUserName(name) != null){
+    if (userRepository.findByUsername(name) != null){
       throw new RegistrationFailureError("This username is already in use.",new RuntimeException());
     }
 
@@ -49,7 +50,7 @@ public record UserService(
     }
 
     final User user = User.builder()
-     .id(UUID.randomUUID().toString())
+     ._id(new ObjectId())
      .username(name)
      .crafterName(crafterName)
      .email(email)
@@ -82,7 +83,7 @@ public record UserService(
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return Optional
-     .ofNullable(userRepository.findUserByUserName(username))
+     .ofNullable(userRepository.findByUsername(username))
      .orElseThrow(() -> new UsernameNotFoundException("USER NOT FOUND!")
      );
   }

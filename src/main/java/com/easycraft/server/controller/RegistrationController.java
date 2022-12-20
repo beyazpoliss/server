@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api")
@@ -21,7 +20,7 @@ public class RegistrationController {
   private UserService userService;
 
   @RequestMapping(path = "/registration", method = RequestMethod.POST)
-  public ResponseEntity<RegistrationResponse> registration(HttpServletResponse httpServletResponse, @RequestBody RegistrationRequest registrationRequest) {
+  public ResponseEntity<RegistrationResponse> registration(@RequestBody RegistrationRequest registrationRequest) {
     try {
       final var response = userService.registrationNewUser(registrationRequest);
       return ResponseEntity.ok().body(response);

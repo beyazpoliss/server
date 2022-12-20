@@ -3,7 +3,6 @@ package com.easycraft.server.security;
 import com.easycraft.server.repository.UserRepository;
 import com.easycraft.server.security.filter.CustomAuthenticationFilter;
 import com.easycraft.server.security.filter.CustomAuthorizationFilter;
-import com.easycraft.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -32,13 +31,13 @@ public class WebSecurityConfiguration {
   public AuthenticationManager authenticationManager(
    final HttpSecurity http,
    final BCryptPasswordEncoder passwordEncoder,
-   final UserDetailsService userService,
+   final UserDetailsService userDetailsService,
    final DefaultAuthenticationEventPublisher defaultAuthenticationEventPublisher
   ) throws Exception {
     return http
      .getSharedObject(AuthenticationManagerBuilder.class)
      .authenticationEventPublisher(defaultAuthenticationEventPublisher)
-     .userDetailsService(userService)
+     .userDetailsService(userDetailsService)
      .passwordEncoder(passwordEncoder)
      .and()
      .build();
@@ -54,11 +53,6 @@ public class WebSecurityConfiguration {
    final ApplicationEventPublisher applicationEventPublisher
   ) {
     return new DefaultAuthenticationEventPublisher(applicationEventPublisher);
-  }
-
-  @Bean
-  public UserDetailsService userDetailsService(){
-    return new UserService(userRepository,bCryptPasswordEncoder());
   }
 
   @Bean
